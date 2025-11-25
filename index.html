@@ -1,0 +1,556 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Audio Visual Direct — Modern Redesign</title>
+  <style>
+    /* -------- Reset & base -------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6;
+      color: #101828;
+      background: #0b1220;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    /* -------- Layout -------- */
+    .container { width: min(1180px, 92vw); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: saturate(1.4) blur(10px);
+      background: linear-gradient(180deg, rgba(11,18,32,0.9), rgba(11,18,32,0.5) 80%, rgba(11,18,32,0));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: .8rem 0;
+    }
+    .brand { display: flex; align-items: center; gap: .8rem; color: #fff; }
+    .brand .logo {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: linear-gradient(135deg, #7dd3fc, #38bdf8 50%, #60a5fa);
+      display: grid; place-items: center; color: #0b1220; font-weight: 900;
+      box-shadow: 0 6px 26px rgba(56,189,248,.35);
+    }
+    .brand h1 { font-size: 1.1rem; margin: 0; letter-spacing: .2px; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: .6rem; }
+    .nav-links a {
+      color: #cbd5e1; padding: .5rem .8rem; border-radius: 999px; font-weight: 600; font-size: .92rem;
+    }
+    .nav-links a.active, .nav-links a:hover { color: #0b1220; background: #93c5fd; }
+    .cta { display: none; }
+    @media (min-width: 920px) {
+      .cta { display: inline-flex; }
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: linear-gradient(135deg, #60a5fa, #38bdf8);
+      color: #0b1220; font-weight: 800; border: none; border-radius: 999px;
+      padding: .7rem 1rem; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(96,165,250,.3);
+    }
+    .btn.secondary { background: rgba(148,163,184,.15); color: #e5e7eb; box-shadow: none; }
+    /* -------- Hero -------- */
+    .hero {
+      position: relative; overflow: hidden; padding: 6rem 0 3rem;
+      background:
+        radial-gradient(900px 400px at 100% -10%, rgba(59,130,246,.35), transparent 60%),
+        radial-gradient(900px 400px at -10% 100%, rgba(56,189,248,.25), transparent 60%);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .kicker { color: #93c5fd; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: .85rem; }
+    .headline {
+      margin: .6rem 0; color: #fff; font-size: clamp(2rem, 3.8vw + .5rem, 3.2rem);
+      line-height: 1.15; letter-spacing: -.3px; font-weight: 900;
+    }
+    .subhead { color: #cbd5e1; max-width: 58ch; }
+    .hero-actions { display: flex; gap: .8rem; margin-top: 1.2rem; flex-wrap: wrap; }
+    /* -------- Sections -------- */
+    section { padding: 3rem 0 2.5rem; }
+    section .section-title {
+      color: #e5e7eb; font-size: 1.6rem; font-weight: 900; margin: 0 0 1rem;
+    }
+    .grid {
+      display: grid; gap: 1rem;
+      grid-template-columns: repeat(1, minmax(0,1fr));
+    }
+    @media (min-width: 720px) { .grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (min-width: 1100px) { .grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+    .card {
+      background: rgba(17,24,39,.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 1rem;
+      color: #e5e7eb;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .card:hover { transform: translateY(-3px); border-color: rgba(147,197,253,.6); box-shadow: 0 16px 40px rgba(30,64,175,.25); }
+    .card h3 { margin: .2rem 0 .4rem; font-size: 1.1rem; }
+    .card p { margin: 0; color: #cbd5e1; font-size: .95rem; }
+    .pill {
+      display: inline-block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+      background: rgba(148,163,184,.18); color: #e2e8f0; padding: .3rem .6rem; border-radius: 999px;
+      margin-bottom: .5rem; font-weight: 800;
+    }
+    /* -------- Two-column blocks -------- */
+    .two-col { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+    @media (min-width: 980px) { .two-col { grid-template-columns: 1.1fr .9fr; align-items: center; } }
+    .panel {
+      background: rgba(17,24,39,.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 1.4rem;
+      color: #e5e7eb;
+    }
+    /* -------- Footer -------- */
+    footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 2.2rem 0 4rem; color: #9ca3af; }
+    .cols { display: grid; gap: 1.4rem; grid-template-columns: repeat(1, minmax(0,1fr)); }
+    @media (min-width: 860px) { .cols { grid-template-columns: 2fr 1fr 1fr; } }
+    .muted { color: #9ca3af; }
+    .small { font-size: .92rem; }
+    /* -------- "Routing" -------- */
+    [data-route] { display: none; }
+    [data-route].active { display: block; }
+    /* -------- Forms -------- */
+    label { color: #cbd5e1; font-size: .92rem; font-weight: 600; }
+    input, textarea, select {
+      width: 100%; padding: .8rem .9rem; border-radius: 12px; border: 1px solid rgba(255,255,255,.12);
+      background: rgba(2,6,23,.6); color: #e5e7eb; outline: none;
+    }
+    input::placeholder, textarea::placeholder { color: #8fa1b3; }
+    .form-grid { display: grid; gap: .9rem; grid-template-columns: 1fr; }
+    @media (min-width: 760px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+    .notice { font-size: .86rem; color: #a3a3a3; }
+    /* -------- Badges -------- */
+    .badges { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .6rem; }
+    .badge { background: rgba(148,163,184,.18); border: 1px solid rgba(148,163,184,.25); color: #e5e7eb; padding: .28rem .6rem; border-radius: 999px; font-size: .78rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#home" data-link>
+        <div class="logo">AV</div>
+        <h1>Audio Visual Direct</h1>
+      </a>
+      <nav class="nav-links">
+        <a href="#home" data-link class="active">Home</a>
+        <a href="#services" data-link>Services</a>
+        <a href="#markets" data-link>Markets</a>
+        <a href="#hire" data-link>Hire</a>
+        <a href="#survey" data-link class="cta btn">Free Site Survey</a>
+        <a href="#contact" data-link class="btn secondary">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <main class="container">
+    <section class="hero" data-route id="home">
+      <div>
+        <div class="kicker">Audio Visual Specialists</div>
+        <h2 class="headline">Design, install & support AV that just works.</h2>
+        <p class="subhead">
+          From projectors and interactive displays to sound systems and hearing loops — we supply, install and hire reliable AV across the South West.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#survey" data-link>Book a free site survey</a>
+          <a class="btn secondary" href="#services" data-link>Explore services</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services summary -->
+    <section data-route id="services">
+      <h3 class="section-title">Services</h3>
+      <div class="grid">
+        <a class="card" href="#service-projectors" data-link>
+          <span class="pill">Install & Supply</span>
+          <h3>Projectors & TVs/Monitors</h3>
+          <p>Supply and installation for meeting rooms, halls and venues — available to buy, lease or hire.</p>
+          <div class="badges"><span class="badge">Projection</span><span class="badge">Large format</span><span class="badge">Mounting</span></div>
+        </a>
+        <a class="card" href="#service-smart" data-link>
+          <span class="pill">Interactive</span>
+          <h3>Interactive Smartboards / Panels</h3>
+          <p>Modern displays for classrooms, training rooms and boardrooms with simple touch controls.</p>
+          <div class="badges"><span class="badge">Education</span><span class="badge">Corporate</span></div>
+        </a>
+        <a class="card" href="#service-audio" data-link>
+          <span class="pill">Sound</span>
+          <h3>Audio Sound Solutions</h3>
+          <p>From microphones to complete PA systems, we design audio that delivers clear speech and music.</p>
+          <div class="badges"><span class="badge">PA</span><span class="badge">Speakers</span><span class="badge">Mixers</span></div>
+        </a>
+        <a class="card" href="#service-hearing" data-link>
+          <span class="pill">Accessibility</span>
+          <h3>Hearing Loop Systems</h3>
+          <p>Induction loops so hearing-aid users get crystal-clear sound at the switch of a ‘T’ setting.</p>
+        </a>
+        <a class="card" href="#service-metroplan" data-link>
+          <span class="pill">Display</span>
+          <h3>Metroplan Presentation & Display</h3>
+          <p>Noticeboards, whiteboards, exhibition systems and projection screens — fixed or portable.</p>
+        </a>
+        <a class="card" href="#service-furniture" data-link>
+          <span class="pill">Hardware</span>
+          <h3>Audio Visual Furniture</h3>
+          <p>Lecterns, trolleys and cabinets to keep equipment secure, tidy and easy to use.</p>
+        </a>
+        <a class="card" href="#service-lamps" data-link>
+          <span class="pill">Spares</span>
+          <h3>Replacement Projector Lamps</h3>
+          <p>Genuine lamps for every make and model — ask for a quick quote.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Service detail panels -->
+    <section data-route id="service-projectors">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Projectors & TVs/Monitors</h3>
+          <p>We design and install screens tailored to your space — from compact meeting rooms to large halls and churches. Purchase outright, lease or hire for one-off events.</p>
+          <div class="badges"><span class="badge">Site survey</span><span class="badge">Mounting & cabling</span><span class="badge">Training</span></div>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#survey" data-link>Request a survey</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">Popular use cases</h4>
+          <ul class="small muted">
+            <li>Meeting & training rooms</li>
+            <li>Church services and community venues</li>
+            <li>Events & “big match” screenings</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section data-route id="service-smart">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Interactive Smartboards / Panels</h3>
+          <p>Touch-enabled displays make presenting and teaching fast and engaging in classrooms, boardrooms and training suites.</p>
+          <div class="badges"><span class="badge">Wall/stand mount</span><span class="badge">Connectivity</span></div>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#survey" data-link>Ask for a demo</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">What’s included</h4>
+          <ul class="small muted">
+            <li>On-site installation</li>
+            <li>Set-up & training</li>
+            <li>Aftercare support</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section data-route id="service-audio">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Audio Sound Solutions</h3>
+          <p>Clear, consistent sound for every seat. We supply and tune microphones, speakers and amplification — whether you need a small PA or a full system.</p>
+          <div class="badges"><span class="badge">PA systems</span><span class="badge">Microphones</span><span class="badge">Hearing support</span></div>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#survey" data-link>Get a quote</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">Venues we support</h4>
+          <ul class="small muted">
+            <li>Houses of worship</li>
+            <li>Education & lecture spaces</li>
+            <li>Corporate & leisure</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section data-route id="service-hearing">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Hearing Loop Systems</h3>
+          <p>Make your space inclusive. Our induction loop systems let hearing-aid users hear with clarity — automatically or via the ‘T’ position.</p>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#survey" data-link>Book a compliance check</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">Options</h4>
+          <ul class="small muted">
+            <li>Counter, room & phased-array loops</li>
+            <li>Testing & signage</li>
+            <li>User guidance</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section data-route id="service-metroplan">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Metroplan Presentation & Display</h3>
+          <p>Everything for presenting well: whiteboards, noticeboards, exhibition displays and projection screens — fixed or portable.</p>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#survey" data-link>Ask about Metroplan</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">Popular items</h4>
+          <ul class="small muted">
+            <li>Noticeboards & whiteboards</li>
+            <li>Display stands & lecterns</li>
+            <li>Portable/projector screens</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section data-route id="service-furniture">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Audio Visual Furniture</h3>
+          <p>Lecterns, stands and secure racks to keep your equipment organised and ready to go.</p>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#survey" data-link>Plan your setup</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">We help with</h4>
+          <ul class="small muted">
+            <li>Space planning</li>
+            <li>Cable management</li>
+            <li>Security & ventilation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section data-route id="service-lamps">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Replacement Projector Lamps</h3>
+          <p>Supply of genuine lamps for all makes and models. Tell us your projector model and we’ll quote quickly.</p>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#contact" data-link>Request a lamp</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">Why genuine?</h4>
+          <ul class="small muted">
+            <li>Better brightness & longevity</li>
+            <li>Protects your projector warranty</li>
+            <li>Safer, more reliable performance</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Markets -->
+    <section data-route id="markets">
+      <h3 class="section-title">Markets</h3>
+      <div class="grid">
+        <div class="card">
+          <span class="pill">Churches</span>
+          <h3>Clarity for services</h3>
+          <p>Discreet projection and sound so everyone can see and hear.</p>
+        </div>
+        <div class="card">
+          <span class="pill">Business</span>
+          <h3>Present with confidence</h3>
+          <p>Meeting rooms, training spaces and reception displays that impress.</p>
+        </div>
+        <div class="card">
+          <span class="pill">Education</span>
+          <h3>Engage every class</h3>
+          <p>Interactive panels and audio tailored to classrooms and halls.</p>
+        </div>
+        <div class="card">
+          <span class="pill">Councils</span>
+          <h3>Robust & accessible</h3>
+          <p>Reliable systems with hearing support and straightforward controls.</p>
+        </div>
+        <div class="card">
+          <span class="pill">Leisure</span>
+          <h3>Big-screen moments</h3>
+          <p>Event projection and venue sound for sport, film and entertainment.</p>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:1rem;">
+        <strong class="small">Coverage:</strong>
+        <span class="small muted">Bath, Swindon, Cardiff, Newport, Gloucester, Cheltenham and surrounding areas.</span>
+      </div>
+    </section>
+
+    <!-- Hire -->
+    <section data-route id="hire">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">AV Equipment Hire</h3>
+          <p>Short-term hire for conferences, events and small gatherings — from projectors and screens to TVs, microphones and sound systems. Half‑day rates available for very short requirements.</p>
+          <div style="margin-top:1rem;">
+            <a class="btn" href="#contact" data-link>Check availability</a>
+            <a class="btn secondary" href="#services" data-link>Back to services</a>
+          </div>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">Popular hire items</h4>
+          <ul class="small muted">
+            <li>Projectors & portable screens</li>
+            <li>Large TVs & stands</li>
+            <li>Microphones & portable PA</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Survey -->
+    <section data-route id="survey">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Book a Free Site Survey</h3>
+          <p>Tell us about your space. We’ll recommend the best setup and provide a clear quote.</p>
+          <form class="form-grid" onsubmit="event.preventDefault(); alert('Thanks — we will be in touch!');">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" placeholder="Your full name" required />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="you@company.com" required />
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" type="tel" placeholder="Mobile or landline" />
+            </div>
+            <div>
+              <label for="org">Organisation</label>
+              <input id="org" placeholder="Company, school, church…" />
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label for="message">Project details</label>
+              <textarea id="message" rows="5" placeholder="Tell us what you need help with…"></textarea>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button class="btn" type="submit">Request survey</button>
+            </div>
+            <p class="notice">Submissions are for demo purposes only in this preview.</p>
+          </form>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">What to expect</h4>
+          <ul class="small muted">
+            <li>Friendly call to understand your needs</li>
+            <li>On-site visit and measurements</li>
+            <li>Written proposal with options</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section data-route id="contact">
+      <div class="two-col">
+        <div class="panel">
+          <h3 class="section-title">Contact</h3>
+          <p class="small muted">We’re here to help choose, install or hire the right AV.</p>
+          <div class="grid" style="grid-template-columns: repeat(1,minmax(0,1fr)); gap:.8rem;">
+            <div class="card">
+              <strong>Call:</strong> <a href="tel:+441934615576">01934 615576</a>
+            </div>
+            <div class="card">
+              <strong>Email:</strong> <a href="mailto:enquiries@audiovisualdirectuk.co.uk">enquiries@audiovisualdirectuk.co.uk</a>
+            </div>
+          </div>
+          <form class="form-grid" style="margin-top:1rem;" onsubmit="event.preventDefault(); alert('Thanks — message sent (demo).');">
+            <div>
+              <label for="cname">Name</label>
+              <input id="cname" placeholder="Your full name" required />
+            </div>
+            <div>
+              <label for="cemail">Email</label>
+              <input id="cemail" type="email" placeholder="you@company.com" required />
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label for="cmsg">Message</label>
+              <textarea id="cmsg" rows="5" placeholder="How can we help?"></textarea>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button class="btn" type="submit">Send message</button>
+            </div>
+            <p class="notice">For demonstration only — connect to your form handler to make this live.</p>
+          </form>
+        </div>
+        <div class="panel">
+          <h4 style="margin-top:0;">Why choose us</h4>
+          <ul class="small muted">
+            <li>Local, specialist team</li>
+            <li>Supply, installation & hire</li>
+            <li>Clear advice and aftercare</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container cols">
+      <div>
+        <div class="brand">
+          <div class="logo">AV</div>
+          <h1>Audio Visual Direct</h1>
+        </div>
+        <p class="small muted" style="margin-top:.6rem;">Serving Bath, Swindon, Cardiff, Newport, Gloucester, Cheltenham and surrounding areas.</p>
+      </div>
+      <div>
+        <div class="small muted">Quick links</div>
+        <div class="badges" style="margin-top:.6rem;">
+          <a class="badge" href="#services" data-link>Services</a>
+          <a class="badge" href="#markets" data-link>Markets</a>
+          <a class="badge" href="#hire" data-link>Hire</a>
+          <a class="badge" href="#survey" data-link>Free survey</a>
+          <a class="badge" href="#contact" data-link>Contact</a>
+        </div>
+      </div>
+      <div>
+        <div class="small muted">Get in touch</div>
+        <p class="small" style="margin:.6rem 0 0;"><a href="tel:+441934615576">01934 615576</a></p>
+        <p class="small" style="margin:.2rem 0 0;"><a href="mailto:enquiries@audiovisualdirectuk.co.uk">enquiries@audiovisualdirectuk.co.uk</a></p>
+        <p class="small muted" style="margin:.6rem 0 0;">© Audio Visual Direct — demo redesign</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simple hash-based router
+    function setActive(route) {
+      document.querySelectorAll('[data-route]').forEach(el => el.classList.remove('active'));
+      const el = document.querySelector(route);
+      if (el) el.classList.add('active');
+      // update active nav link
+      document.querySelectorAll('[data-link]').forEach(a => a.classList.remove('active'));
+      document.querySelectorAll('[href=\"' + route + '\"][data-link]').forEach(a => a.classList.add('active'));
+      // scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function handleHash() {
+      const route = location.hash || '#home';
+      setActive(route);
+    }
+    window.addEventListener('hashchange', handleHash);
+    document.addEventListener('DOMContentLoaded', handleHash);
+  </script>
+</body>
+</html>
